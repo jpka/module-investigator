@@ -1,0 +1,26 @@
+{
+  "name": "module-investigator",
+  "version": "0.0.0",
+  "description": "Find valid AMD and CommonJS style dependencies. Report information about format adherence.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha",
+    "testWatch": "node_modules/.bin/mocha --watch"
+  },
+  "repository": "git@github.com:jpka/module-inspector.git",
+  "keywords": [
+    "dependencies",
+    "ast",
+    "amd",
+    "commonjs"
+  ],
+  "author": "Juan Pablo Kaniefsky",
+  "license": "BSD",
+  "devDependencies": {
+    "chai": "~1.6.0",
+    "mocha": "~1.9.0"
+  },
+  "dependencies": {
+    "esprima": "~1.0.2"
+  }
+}
