@@ -7,25 +7,11 @@ var chai = require("chai"),
     },
     deps = ["a", "b", "c"];
 
-describe("Investigator's", function() {
+describe("Investigator", function() {
 
   it("correctly obtains CommonJS dependencies", function() {
     expect(investigator(fixture("cjs-deps")).dependencies.commonJS).to.deep.equal(deps);
   });
-
-  /*
-  it("avoids CommonJS false positives when require is defined as a declared variable in the context it is used", function() {
-    expect(investigator(fixture("defined-variable-require-cjs-deps")).dependencies.commonJS).to.be.empty;
-  });
-
-  it("avoids CommonJS false positives when require is defined as a function parameter in the context it is used", function() {
-    expect(investigator(fixture("function-parameter-require-cjs-deps")).dependencies.commonJS).to.be.empty;
-  });
-
-  it("avoids CommonJS false positives when require is defined as a function in the context it is used", function() {
-    expect(investigator(fixture("defined-function-require-cjs-deps")).dependencies.commonJS).to.be.empty;
-  });
-  */
 
   it("correctly obtains AMD dependencies from an anonymous module", function() {
     expect(investigator(fixture("anonymous-amd-deps")).dependencies.amd).to.deep.equal(deps);
@@ -41,6 +27,19 @@ describe("Investigator's", function() {
 
   it("correctly obtains AMD dependencies from a simplified CommonJS wrapper", function() {
     expect(investigator(fixture("wrapped-amd-deps")).dependencies.amd).to.deep.equal(deps);
+  });
+
+  it("correctly obtains AMD and CommonJS dependencies from a hybrid module", function() {
+    expect(investigator(fixture("hybrid")).dependencies.amd).to.deep.equal(deps);
+    expect(investigator(fixture("hybrid")).dependencies.commonJS).to.deep.equal(["d", "e", "f"]);
+  });
+
+  it("reports when exports, module, define and require are defined in-module", function() {
+    expect(investigator(fixture("defines")).defines.sort()).to.deep.equal(["exports", "module", "define", "require"].sort());
+  });
+
+  it("reports when exports, module, define and require are used", function() {
+    expect(investigator(fixture("uses")).uses.sort()).to.deep.equal(["exports", "module", "define", "require (AMD)", "require (CommonJS)"].sort());
   });
 
 });

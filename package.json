@@ -1,8 +1,11 @@
 {
   "name": "module-investigator",
-  "version": "0.0.0",
-  "description": "Find valid AMD and CommonJS style dependencies. Report information about format adherence.",
+  "version": "0.1.1",
+  "description": "Find AMD and CommonJS style dependencies. Report information about format adherence.",
   "main": "index.js",
+  "bin": {
+    "investigate": "bin/cmd.js"
+  },
   "scripts": {
     "test": "node_modules/.bin/mocha",
     "testWatch": "node_modules/.bin/mocha --watch"
