@@ -32,31 +32,24 @@ function traverse(node, cb) {
 };
 
 function checkForDefinitions(node) {
-  var checkFor = /require|define|exports|module/,
+  var checkFor = /\brequire\b|\bdefine\b|\bexports\b|\bmodule\b/,
     definitions = [];
   
   if (node.id && node.id.name.match(checkFor) && node.type.match(/VariableDeclarator|FunctionDeclaration|FunctionExpression/)) {
     definitions.push(node.id.name);
   }
-
-  if (node.type === "FunctionExpression" && node.params.length) {
-    definitions = definitions.concat(node.params.map(function(param) {
-      if (param.name.match(checkFor)) {
-        //oh the horror. needs a visit from the refactor fairy.
+  if (node.type && node.type.match(/FunctionDeclaration|FunctionExpression/)) {
+    definitions = definitions.concat(
+      node.params.filter(function(param) {
+        return param.name.match(checkFor);
+      }).map(function(param) {
         if (param.name === "require" && node.parent && node.parent.parent && node.parent.parent.callee && node.parent.parent.callee.name === "define") {
           return "CommonJSWrapper";
         } else {
           return param.name;
         }
-      }
-    }));
-  } else if (node.type === "FunctionDeclaration") {
-    definitions = definitions.concat(node.params.map(function(param) {
-      if (param.name.match(checkFor)) {
-        return param.name;
-      }
-      return false;
-    }));
+      })
+    );
   }
 
   return definitions.length ? definitions : false;
@@ -71,7 +64,7 @@ function checkForDependencies(node) {
   if (node.type === "CallExpression" && 
     callee &&
     callee.type === "Identifier" &&
-    callee.name.match(/require|define/) &&
+    callee.name.match(/\brequire\b|\bdefine\b/) &&
     node.arguments.length) {
 
     //require(id)
@@ -114,7 +107,7 @@ function checkForDependencies(node) {
 
 function checkForModuleExportsUsage(node) {
   if (node.type === "AssignmentExpression") {
-    if (node.left.object && node.left.object.name.match(/exports|module/)) {
+    if (node.left.object && node.left.property && node.left.object.name && node.left.object.name.match(/\bexports\b|\bmodule\b/)) {
       return node.left.object.name;
     }
   }
