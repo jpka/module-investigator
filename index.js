@@ -122,6 +122,9 @@ module.exports = function(fileContents) {
   defined = {},
   uses = {};
 
+  // Take care of that nasty shebang
+  fileContents = fileContents.replace(/^#![^\n]*\n/, "");
+
   traverse(esprima.parse(fileContents), function(node) {
     var checked;
 

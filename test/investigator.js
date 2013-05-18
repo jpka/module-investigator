@@ -42,4 +42,12 @@ describe("Investigator", function() {
     expect(investigator(fixture("uses")).uses.sort()).to.deep.equal(["exports", "module", "define", "require (AMD)", "require (CommonJS)"].sort());
   });
 
+  it("works on files with shebang", function() {
+    var bomb = function() {
+      return investigator(fixture("shebang"));
+    }
+    expect(bomb).not.to.throw(Error);
+    expect(bomb()).to.have.property("dependencies");
+  });
+
 });

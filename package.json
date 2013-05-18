@@ -1,6 +1,6 @@
 {
   "name": "module-investigator",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Find AMD and CommonJS style dependencies. Report information about format adherence.",
   "main": "index.js",
   "bin": {
