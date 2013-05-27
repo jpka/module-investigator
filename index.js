@@ -68,9 +68,11 @@ function checkForDependencies(node) {
     node.arguments.length) {
 
     //require(id)
-    if (callee.name === "require" && node.arguments.length === 1 && node.arguments[0].type === "Literal") {
-      type = node.scope.requireAsCommonJSWrapper ? "amd" : "commonJS";
-      deps = [node.arguments[0].value];
+    if (callee.name === "require" && node.arguments.length === 1 && node.arguments[0].type !== "ArrayExpression") {
+      if (node.arguments[0].type === "Literal") {
+        type = node.scope.requireAsCommonJSWrapper ? "amd" : "commonJS";
+        deps = [node.arguments[0].value];
+      }
       uses.push("require (CommonJS)");
     //require([]) or define([]) or define(id, [])
     } else {

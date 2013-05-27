@@ -42,6 +42,10 @@ describe("Investigator", function() {
     expect(investigator(fixture("uses")).uses.sort()).to.deep.equal(["exports", "module", "define", "require (AMD)", "require (CommonJS)"].sort());
   });
 
+  it("correctly identifies the use of an expression within require as a CommonJS (node) require", function() {
+    expect(investigator(fixture("require-expression")).uses).to.include("require (CommonJS)");
+  });
+
   it("works on files with shebang", function() {
     var bomb = function() {
       return investigator(fixture("shebang"));
@@ -49,5 +53,6 @@ describe("Investigator", function() {
     expect(bomb).not.to.throw(Error);
     expect(bomb()).to.have.property("dependencies");
   });
+
 
 });
